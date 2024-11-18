@@ -1,3 +1,8 @@
 go 1.23.3
 
-use ./hello_world
+use (
+	./foundation/const_iota
+	./foundation/declaration
+	./foundation/zero_value
+	./hello_world
+)
