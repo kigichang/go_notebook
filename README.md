@@ -1,0 +1,80 @@
+# Go 筆記
+
+由於[先前的筆記](https://github.com/kigichang/go_course)已經過時；近幾年工作關係，對 Go 的體驗有新的想法，因此重新整理筆記，並且新增一些新的內容。
+
+本文件適合已有一種程式語言經驗的同好閱讀，內容如有錯誤或建議，可以隨時與我連絡。
+
+## 資源
+
+- [Go 官網](https://go.dev/)
+- [Tutorials](https://go.dev/doc/tutorial/)
+- [Go Wiki](https://go.dev/wiki/)
+- [Effective Go](https://go.dev/doc/effective_go) (必讀)
+
+## 開發環境
+
+- Go: 1.23.3
+- Apple M1 Pro
+- 開發工具: [VSCode](https://code.visualstudio.com/)
+
+## 筆記內容
+
+### Go 基礎
+
+1. [Hello World](hello_world/README.md)
+    - IDE 環境
+    - Go 專案管理
+    - Hello World
+    - 跨平台編譯
+    - Go 語言特性與 Rust, Scala 比較
+1. 資料型別與流程控制
+    - Primitive Type and Zero Value
+    - Control Flow
+    - Function
+    - String and Rune
+    - Array and Slice
+    - Map
+1. 進階資料型別與介面
+    - Struct and Method
+    - Interface
+    - Type Assertion
+    - Type Switch
+1. Package and OOP
+    - Package and Encapsulation
+    - Anonymous Field
+    - Fake Inheritance
+1. Defer and Error Handling
+    - Error
+    - Panic and Recover
+    - Defer
+1. Testing
+    - Test
+    - Benchmark
+    - Example
+
+## Go Concurrency
+
+1. Goroutine, WaitGroup and Mutex
+1. Channel and Select
+1. Context
+
+### Go 應用
+
+1. JSON and Struct Tag
+1. Command Line Tool: Cobra
+1. Configuration: Viper and TOML
+1. Database and MySQL
+1. Text/Hmtl Template
+1. Embed
+1. Gorilla Web Tookit and WebSocket
+1. Echo Web Framework
+1. RESTful Service with Echo
+1. GRPC
+
+### Go 進階
+
+1. Build Constraints
+1. Generic
+1. Reflection
+1. CGO
+1. WebAssembly (不建議使用)
