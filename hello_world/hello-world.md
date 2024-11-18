@@ -30,6 +30,7 @@ Workspace 可以同時管理多個相依專案。
 1. 建立 Workspace 目錄，如: `mkdir go_notebook`。
 1. 進入 Workspace 目錄，`cd go_notebook`。
 1. 執行 `go work init`，在 **go_notebook** 目錄下，產生 **go.work** 檔案。
+1. 當有多個專案加入 Workspace 後，可以使用 `go work sync` 同步 Workspace 中的專案依賴的套件。
 
 #### 2.2 Module
 
@@ -71,50 +72,50 @@ env GOOS=linux GOARCH=amd64 go build .
 如果要查詢對應的平台，可以執行 `go tool dist list` 查詢。依[官方文件](https://go.dev/doc/install/source#environment)，列出支援的平台有：
 
 | ```$GOOS``` | ```$GOARCH``` |
-| ----- | ------- |
-| aix | ppc64 |
-| android | 386 |
-| android | amd64 |
-| android | arm |
-| android | arm64 |
-| darwin | amd64 |
-| darwin | arm64 |
-| dragonfly | amd64 |
-| freebsd | 386 |
-| freebsd | amd64 |
-| freebsd | arm |
-| illumos | amd64 |
-| ios | arm64 |
-| js | wasm |
-| linux | 386 |
-| linux | amd64 |
-| linux | arm |
-| linux | arm64 |
-| linux | loong64 |
-| linux | mips |
-| linux | mipsle |
-| linux | mips64 |
-| linux | mips64le |
-| linux | ppc64 |
-| linux | ppc64le |
-| linux | riscv64 |
-| linux | s390x |
-| netbsd | 386 |
-| netbsd | amd64 |
-| netbsd | arm |
-| openbsd | 386 |
-| openbsd | amd64 |
-| openbsd | arm |
-| openbsd | arm64 |
-| plan9 | 386 |
-| plan9 | amd64 |
-| plan9 | arm |
-| solaris | amd64 |
-| wasip1 | wasm |
-| windows | 386 |
-| windows | amd64 |
-| windows | arm |
-| windows | arm64 |
+| ----------- | ------------- |
+| aix         | ppc64         |
+| android     | 386           |
+| android     | amd64         |
+| android     | arm           |
+| android     | arm64         |
+| darwin      | amd64         |
+| darwin      | arm64         |
+| dragonfly   | amd64         |
+| freebsd     | 386           |
+| freebsd     | amd64         |
+| freebsd     | arm           |
+| illumos     | amd64         |
+| ios         | arm64         |
+| js          | wasm          |
+| linux       | 386           |
+| linux       | amd64         |
+| linux       | arm           |
+| linux       | arm64         |
+| linux       | loong64       |
+| linux       | mips          |
+| linux       | mipsle        |
+| linux       | mips64        |
+| linux       | mips64le      |
+| linux       | ppc64         |
+| linux       | ppc64le       |
+| linux       | riscv64       |
+| linux       | s390x         |
+| netbsd      | 386           |
+| netbsd      | amd64         |
+| netbsd      | arm           |
+| openbsd     | 386           |
+| openbsd     | amd64         |
+| openbsd     | arm           |
+| openbsd     | arm64         |
+| plan9       | 386           |
+| plan9       | amd64         |
+| plan9       | arm           |
+| solaris     | amd64         |
+| wasip1      | wasm          |
+| windows     | 386           |
+| windows     | amd64         |
+| windows     | arm           |
+| windows     | arm64         |
 
 如果在 Linux 平台，可以多加 `CGO_ENABLED=0`，不使用目前 Linux 編譯環境上的 GNU C Library，避免在其他 Linux 環境上，出現版本不相容的問題。
 
@@ -136,11 +137,9 @@ $ env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build .
 
 ### 5. Rust, Go, Scala 比較
 
-以下是以筆者從 Rust, Go, 與 Scala 的實戰經驗的比較。筆者 Java 經驗停在 JDK 8 前的版本，之後轉用 Scala；Scala 之後就以 Go 為主。Scala 版本，筆者是停留在 2.11 版本，因此如果對 Scala 的理解有錯，還請指正。
+以下是筆者從 Rust, Go, 與 Scala 的過往經驗的比較。筆者 Java 經驗停在 JDK 8 前的版本，之後轉用 Scala；Scala 之後就以 Go 為主。Scala 版本，筆者是停留在 2.11 版本，因此如果對 Scala 的理解有錯，還請指正。
 
-Go 標榜 **大道至簡** 的精神，沒有太複雜的機制，因此易學易上手，非常適合當作第二程式語言學習。
-
-:+1: 是筆者非常喜歡的特性。
+:+1: 是筆者非常喜歡的程式語言特性，Go 在某些方面上，支援度較弱。Go 標榜 **大道至簡** 的精神，沒有太複雜的機制，因此易學易上手，非常適合當作第二程式語言學習。
 
 | 比較 | Rust | Go | Scala |
 | - | - | - | - |
