@@ -1,8 +1,8 @@
-# Go 筆記
+# Go 第二版筆記
 
-由於[先前的筆記](https://github.com/kigichang/go_course)已經過時；近幾年工作關係，對 Go 的體驗有新的想法，因此重新整理筆記，並且新增一些新的內容。
+[Go Go 已經 15 歲了](https://go.dev/blog/15years)，由於[先前的筆記](https://github.com/kigichang/go_course)累積了很多歷史的進程，再加上近幾年工作關係，對 Go 的體驗有新的想法，因此重新整理筆記，移除過時汰除的內容，並且新增近幾年新的經驗。
 
-本文件適合已有一種程式語言經驗的同好閱讀，內容如有錯誤或建議，可以隨時與我連絡。
+新的筆記會由目前 1.23 版本開始，會與之前的版本有所不同；因此建議一同升版至 1.23 版本。如果想了解之前 Go 功能的變化，可以參考[先前的筆記](https://github.com/kigichang/go_course)。
 
 ## 資源
 
@@ -69,6 +69,7 @@
 1. Gorilla Web Tookit and WebSocket
 1. Echo Web Framework
 1. RESTful Service with Echo
+1. GoCron
 1. GRPC
 
 ### Go 進階
