@@ -31,11 +31,15 @@
     - Primitive Type and Zero Value
     - Control Flow
     - Function
-    - String and Rune
-    - Array and Slice
-    - Map
 1. 進階資料型別與介面
+    - Array and Slice
+    - String and Rune
+    - Map
+    - Type, Alias and Enum
     - Struct and Method
+1. Pointer and Interface
+    - Struct and Pointer
+    - Call by Value in Fuction and Method
     - Interface
     - Type Assertion
     - Type Switch

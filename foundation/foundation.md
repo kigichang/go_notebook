@@ -1,14 +1,423 @@
-# Go 基硫
+---
+export_on_save:
+  markdown: true
+markdown:
+  image_dir: assets
+  path: README.md
+  ignore_from_front_matter: true
+  absolute_image_path: false
+---
+# Go 基礎
 
-## 1 Build-in
+[The Go Programming Language Specification](https://go.dev/ref/spec)
 
-## 2. Basic Types
+## 1. Built-in
 
-### Declartion
+### 1.1 Keywords
 
-### Zero Value
+Go 有以下關鍵字，不能用來當作變數名稱。後續會提到如何使用這些關鍵字。
 
-### Costant, iota, and Enum
+```go
+break        default      func         interface    select
+case         defer        go           map          struct
+chan         else         goto         package      switch
+const        fallthrough  if           range        type
+continue     for          import       return       var
+```
+
+see [Go Keywords](https://golang.org/ref/spec#Keywords)
+
+### 1.2 Functions
+
+Go 內建的函式，後續的內容會提到如何使用這些內建函數。
+
+- `append`: appending slices
+- `copy`: copying slices
+- `clear`: fill zero values into variable
+- `close`: close channel
+- `complex`: construct complex number
+- `real`: get real part of complex number
+- `imag`: get imaginary part of complex number
+- `delete`: delete element from map
+- `len`: length of array, slice, string, map, channel
+- `cap`: capacity of slice, channel
+- `make`: create slice, map, channel
+- `new`: allocate memory
+- `max`: maximum value of two values
+- `min`: minimum value of two values
+- `panic`: stop normal execution
+- `recover`: recover from panic
+- `print`: print to standard output
+- `println`: print to standard output with newline
+
+see [Go Built-in Functions](https://go.dev/ref/spec#Built-in_functions)
+
+## 2. Primitive Types
+
+## 2.1 Boolean Types
+
+只有 `true` 及 `false`，且不能像 C 數字或 null 來當 boolean 使用。
+
+## 2.2 Numeric Types
+
+| Type       | Description                                              |
+| ---------- | -------------------------------------------------------- |
+| uint8      | 無符號 8-bit 整數 (0 to 255)                               |
+| uint16     | 無符號 16-bit 整數 (0 to 65535)                            |
+| uint32     | 無符號 32-bit 整數 (0 to 4294967295)                       |
+| uint64     | 無符號 64-bit 整數 (0 to 18446744073709551615)             |
+| int8       | 8-bit 整數 (-128 to 127)                                  |
+| int16      | 16-bit 整數 (-32768 to 32767)                             |
+| int32      | 32-bit 整數 (-2147483648 to 2147483647)                   |
+| int64      | 64-bit 整數 (-9223372036854775808 to 9223372036854775807) |
+| float32    | 32-bit 浮點數                                             |
+| float64    | 64-bit 浮點數                                             |
+| complex64  | float32 複數                                              |
+| complex128 | float64 複數                                              |
+| byte       | 位元組，uint8 別名                                         |
+| rune       | Unicode 字元，int32 別名                                   |
+| uint       | 無符號整數，平台相依，uint32 或 uint64                       |
+| int        | 整數，平台相依，可能是 int32 或 int64                        |
+| uintptr    | 指標位址                                                  |
+
+## 2.3 變數宣告
+
+### 2.3.1 完整宣告
+
+```go
+var name type = expression
+```
+
+```go
+var a int = 0
+```
+
+1. 宣告變數，不給初始值，可以省略 `= expression`
+
+    ```go
+    var a int
+    ```
+
+1. 宣告變數，給初始值時，則可以省略資料型別
+
+    ```go
+    var a = 10
+    ```
+
+常用的方式如下：
+
+1. 宣告變數，不給初始值
+
+    ```go
+    var s string
+    println(s) // ""
+    ```
+
+1. 一次宣告多個變數，並給初始值(可省略型別)
+
+    ```go
+    var i, j, k int                 // int, int, int
+    var b, f, s = true, 2.3, "four" // bool, float64, string
+    ```
+
+1. 如果函式有回傳多組值時
+
+    ```go
+    var f, err = os.Open(name) // os.Open returns a file and an error
+    ```
+
+1. 檢查 map 是否存在指定的 key
+
+    ```go
+    var val, ok = ages["bob"]
+    ```
+
+1. 檢查是否可以轉換型別
+
+    ```go {.line-numbers}
+    var guessType, ok = a.(guessType)
+    ```
+
+### 2.3.2 使用 `:=` 簡寫
+
+使用 `:=` 省略 `var`
+
+```go {.line-numbers}
+name := expression
+```
+
+使用方式如下：
+
+1. 省略型別宣告
+
+    ```go {.line-numbers}
+    i, j := 0, 1
+    ```
+
+1. 接收函式回傳值
+
+    ```go {.line-numbers}
+    anim := gif.GIF{LoopCount: nframes}
+    freq := rand.Float64() * 3.0
+    t := 0.0
+
+    f, err := os.Open(name)
+    if err != nil {
+    return err
+    }
+
+    // ...use f...
+
+    f.Close()
+
+    val, ok := ages["bob"]
+    guessType, ok := a.(guessType)
+    ```
+
+使用 `:=` 時，左邊的變數名稱，至少要有一個是新的。
+
+1. 至少要有一個是新的變數名稱
+
+    ```go
+    in, err := os.Open(infile)
+    // ...
+    out, err := os.Create(outfile)
+    ```
+
+    以上，雖然 `err` 重覆，但 `out` 是新的變數名稱，compile 會過。
+
+1. 都是舊的
+
+    ```go
+    f, err := os.Open(infile)
+    // ...
+    f, err := os.Create(outfile) // compile error: no new variables
+    ```
+
+    以上，`f` 與 `err` 都是舊的變數，所以在第二次，還是使用 `:=` 時，compile 會錯。通常 compile 會報錯，都不是什麼大問題，修正就好了。
+
+### 2.4 預設型別
+
+當省略型別時，Go 的編譯器會自動帶入預設型別。
+
+- 整數: __int__
+- 浮點數: __float64__
+- 複數型別: __complex128__
+
+### 2.5 數值宣告
+
+以往宣告很大數值時，無法像 excel 每千分位，用 `,` 來區隔。現在 Go 也支援這項功能，可以使用 `_` 來區隔。
+
+```go
+var x int64 = 123_456_789
+var y float64 = 12_345.678_9
+```
+
+### 2.6 Zero Value
+
+每一種資料型別在宣告時，沒有給定值的話，則 Go 會給予一個初始值，這個初始值則稱為該型別的 __Zero Value__。
+
+| Type           | Zero Value |
+| -------------- | ---------- |
+| Boolean        | false      |
+| Integer        | 0          |
+| Floating Point | 0.0        |
+| string         | ""         |
+| pointer        | nil        |
+| interface      | nil        |
+| map            | nil        |
+| slice          | nil        |
+| struct         | 依每一個 field 的資料型別，給定對應的 zero value. |
+
+### 2.7 複數
+
+GO 的複數
+
+- complex64: 由兩個 float32 組成
+- complex128: 由兩個 float64 組成
+
+1. 複數宣告
+
+    @import "declaration/main.go" {line_begin=28 line_end=30}
+
+1. 使用 `complex` function 宣告， `real` 與 `imag` function
+
+    @import "declaration/main.go" {line_begin=33 line_end=38}
+
+### 2.8 Constant and itoa
+
+與 C 相同，利用 `const` 這個關鍵字來宣告常數。
+
+@import "const_iota/main.go" {line_begin=2 line_end=6}
+
+可以使用 `iota` 定義連續的常數，`iota` 是一個特殊的常數，從 0 開始，每次宣告時，會自動遞增。
+可以利用 __\___ 萬用字元，不用宣告變數，只是為了讓 `iota` 遞增。
+
+@import "const_iota/main.go" {line_begin=7 line_end=21}
+
+see [Go Wiki: Iota](https://go.dev/wiki/Iota)
+
+## 3. Functions
+
+### 3.1 宣告
+
+使用 `func` 關鍵字來宣告 function。
+
+```go
+func name(parameter-list) (result-list) {
+    body
+}
+```
+
+如:
+
+```go
+func hypot(x float64, y float64) float64 {
+    return math.Sqrt(x*x + y*y)
+}
+
+println(hypot(3, 4)) // "5"
+```
+
+### 3.2 Grouping 相同型別
+
+如果參數型別相同，可以將型別寫在最後一個參數後面，簡化宣告。
+
+```go
+func f(i int, j int, k int, s string, t string) { /* ... */ } // original
+func f(i, j, k int, s, t string)                { /* ... */ } // simplify
+```
+
+### 3.3 回傳值
+
+Go 函式的回傳值，也可以像參數命名；如果回傳值有命名，等同在函式內宣告了一個變數，並且給需對應的 Zero Value。
+
+```go
+func add(x int, y int) int { return x+y }
+func sub(x, y int) (z int) { z = x - y; return }
+func first(x int, _ int) int { return x }
+func zero(int, int) int { return 0 }
+```
+
+Go 的 function 可以一次回傳多個值。
+
+```go {.line-numbers}
+func swap(x, y int) (int, int) {
+    return y, x
+}
+
+a, b := 1, 2        // a = 1, b = 2
+a, b = swap(a, b)   // a = 2, b = 1
+```
+
+### 3.4 Variadic Functions
+
+function 的參數個數可以是不固定的。eg:
+
+1. 宣告
+
+    ```go
+    func sum(vals ...int) int {
+        total := 0
+        for _, val := range vals {
+            total += val
+        }
+        return total
+    }
+
+    println(sum())           //  "0"
+    println(sum(3))          //  "3"
+    println(sum(1, 2, 3, 4)) //  "10"
+    ```
+
+1. 如何將 slice 傳入:
+
+    ```go
+    values := []int{1, 2, 3, 4}
+    println(sum(values...)) // "10"
+    ```
+
+### 3.5 Recursion 遞迴
+
+```go {.line-numbers}
+func gcd(a, b int) int {
+    if b == 0 {
+        return a
+    }
+
+    return gcd(b, a % b)
+}
+
+println(gcd(24, 128)) // 8
+```
+
+### 3.6 Signature
+
+一個 function 的型別，通常也稱做 __Signature__。兩個 function 有相同的 signature，需滿足以下兩個條件：
+
+1. 參數 (parameters) 資料型別與順序相同，與參數名稱無關。
+1. 回傳的值的資料型別與順序相同
+
+eg:
+
+```go
+func add(x int, y int) int { return x+y }
+func sub(x, y int) (z int) { z= x - y; return }
+func first(x int, _ int) int { return x }
+func zero(int, int) int { return 0 }
+
+printf("%T\n", add)   // "func(int, int) int"
+printf("%T\n", sub)   // "func(int, int) int"
+printf("%T\n", first) // "func(int, int) int"
+printf("%T\n", zero)  // "func(int, int) int"
+```
+
+### 3.7 First-Class Language
+
+在 Go 的 function 是一種資料型別，可以當作參數與回傳值。
+以 Go 來說，__signature__ 是 Function 的資料型別。當宣告 funcation 沒有命名時，則稱為 __anonymous function__。
+
+#### 3.7.1 Assignment
+
+Function 可以當作一個值，assign 給某個變數。
+
+```go {.line-numbers}
+func square(n int) int { return n * n }
+func negative(n int) int { return -n }
+func product(m, n int) int { return m * n }
+
+var f func(int) int     // signature
+
+f = square
+println(f(3))       // "9"
+f = negative
+println(f(3))       // "-3"
+
+f = product // cannot use product (type func(int, int) int) as type func(int) int in assignment
+```
+
+### 3.7.2 As Parameter and Return
+
+Function 可以當作參數與回傳值。
+
+```go {.line-numbers}
+func square(n int) int { return n * n }
+func negative(n int) int { return -n }
+
+func compose(f, g func(int) int) func(int) int {
+    return func(a int) int {        // anonymous function
+        return g(f(a))
+    }
+}
+
+k1 := compose(square, negative)
+printf("%T\n", k1)              // func(int) int
+println(k1(10))                 // -100 negative(square(10))
+
+k2 := compose(negative, square)
+printf("%T\n", k2)              // func(int) int
+println(k2(10))                 // 100 square(negative(10))
+```
 
 ## Array and Slice
 
@@ -34,11 +443,39 @@ Slice 的 __zero value__ 是 __nil__。宣告的方式可以是：`[]T` T 是指
 months := [...]string{1: "January", /* ... */, 12: "December"}
 Q2 := months[4:7]
 summer := months[6:9]
-fmt.Println(Q2)     // ["April" "May" "June"]
-fmt.Println(summer) // ["June" "July" "August"]
+println(Q2)     // ["April" "May" "June"]
+println(summer) // ["June" "July" "August"]
 ```
 
-![Slice](slice.png)
+```ditaa
+                         +-------------+ 
+Q2 = Months[4:7]         | ""          |               summer = months[6:9]
++--------+               +-------------+               +--------+
+| Data   |---+           | "January"   |           +---| Data   |
+| len: 3 |   |           +-------------+           |   | len: 3 |
+| cap: 9 |   |           | "February"  |           |   | cap: 9 |
++--------+   |           +-------------+           |   +--------+
+             |           | "March"     |           | 
+             +-------+-> +-------------+           |
+             |       |   | "April"     |           |
+             |       |   +-------------+           | 
+             |       |   | "May"       |           | 
+             | len=3 |   +-------------+ <-+-------+
+             |       |   | "June"      |   |       |
+             |       +-- +-------------+   |       |
+             |           | "July"      |   | len=3 |
+       cap=9 |           +-------------+   |       | 
+             |           | "August"    |   |       | cap=7
+             |           +-------------+ --+       |
+             |           | "September" |           |
+             |           +-------------+           |
+             |           | "October"   |           |
+             |           +-------------+           |
+             |           | "November"  |           |
+             |           +-------------+           |
+             |           | "December"  |           |
+             +---------- +-------------+ ----------+
+```
 
 1. `Q2`是取 `April`, `May`, `June` 值，Pointer 會指到 `April` 為開啟。 Q2 只取三個月份，因此 Length 是 __3__；全部資料有 12 筆，Q2 是從 `April` 開始，捨棄前面 4 筆資料，因此 Capacity 為 __9___ (12 - 4 = 9)。
 
@@ -73,15 +510,15 @@ fmt.Println(summer) // ["June" "July" "August"]
 ```go {.line-numbers}
 a := []int{1, 2, 3}
 for i := range a {
-    fmt.Println(a[i])
+    println(a[i])
 }
 
 for i, v := range a {
-    fmt.Println(i, v)
+    println(i, v)
 }
 
 for _, v := range a {
-    fmt.Println(v)
+    println(v)
 }
 ```
 
@@ -128,10 +565,10 @@ delete(ages, "cat")
 Map 在取值時，如果 key 不存在，會回值 value 型別的 __zero value__，也因此無法直接從回傳值來判斷該 key 是否存在。可以利用 `value, ok := map[key]` 的方式，透過驗証 `ok` 來判斷 key 是否存在。
 
 ```go {.line-numbers}
-fmt.Println(ages["bob"])    // 0 (zero-value)
+println(ages["bob"])    // 0 (zero-value)
 
 a, ok := ages["bob"]
-fmt.Println(a, ok)          // 0, false
+println(a, ok)          // 0, false
 ```
 
 ### 3.6 Map Travel
@@ -145,202 +582,18 @@ m := map[int]string{
 }
 
 for key := range m {
-    fmt.Println(key, m[key])
+    println(key, m[key])
 }
 
 for key, val := range m {
-    fmt.Println(key, val)
+    println(key, val)
 }
 
 for _, val := range m {
-    fmt.Println(val)
+    println(val)
 }
 ```
 
-
-## Functions
-
-## 1. 宣告
-
-```go {.line-numbers}
-func name(parameter-list) (result-list) {
-    body
-}
-```
-
-```go {.line-numbers}
-func hypot(x float64, y float64) float64 {
-    return math.Sqrt(x*x + y*y)
-}
-
-fmt.Println(hypot(3, 4)) // "5"
-```
-
-### 1.1 Grouping 相同型別
-
-```go {.line-numbers}
-func f(i int, j int, k int, s string, t string) { /* ... */ } // original
-func f(i, j, k int, s, t string)                { /* ... */ } // simplify
-```
-
-### 1.2 回傳值
-
-```go {.line-numbers}
-func add(x int, y int) int { return x+y }
-func sub(x, y int) (z int) { z = x - y; return }
-func first(x int, _ int) int { return x }
-func zero(int, int) int { return 0 }
-```
-
-Go 的 function 可以一次回傳多個值 (tuple)
-
-```go {.line-numbers}
-func swap(x, y int) (int, int) {
-    return y, x
-}
-
-a, b := 1, 2        // a = 1, b = 2
-a, b = swap(a, b)   // a = 2, b = 1
-```
-
-### 1.3 Variadic Functions
-
-function 的參數個數可以是不固定的。eg:
-
-1. 宣告
-
-    ```go {.line-numbers}
-    func sum(vals ...int) int {
-        total := 0
-        for _, val := range vals {
-            total += val
-        }
-        return total
-    }
-
-    fmt.Println(sum())           //  "0"
-    fmt.Println(sum(3))          //  "3"
-    fmt.Println(sum(1, 2, 3, 4)) //  "10"
-    ```
-
-1. 如何將 slice 傳入:
-
-    ```go {.line-numbers}
-    values := []int{1, 2, 3, 4}
-    fmt.Println(sum(values...)) // "10"
-    ```
-
-### 1.4 空白 Body
-
-可以定義 function 但沒有 body。通常是用另一種程式語言來實作，比如 C or Javascript in WASM。越是底層的工作越容易看到這樣子的做法。
-
-## 2. Recursion 遞迴
-
-```go {.line-numbers}
-func gcd(a, b int) int {
-    if b == 0 {
-        return a
-    }
-
-    return gcd(b, a % b)
-}
-
-fmt.Println(gcd(24, 128)) // 8
-```
-
-## 3. Pass by Value (Call by Value)
-
-Go 在傳遞參數時，是以 **by value** 的方式進行，也就是說在傳入 function 前，會產生一份新的資料，給 function 使用，也因此 function 修改時，也是修改此新的資料。
-
-此時要特別注意傳入的資料型別：
-
-- Aggregate Types (Array, Struct)，在 Java 的定義下，是屬於 Value Types，也就是說會產生一筆新的資料給 function，function 做任何修改，都**不會**異動到原本的資料，如果 array/struct 資料很龐大時，會造成記憶體的浪費。
-- Reference Types (Pointer, Slice, Map, Function, Channel)，一樣在傳入 function 時，會複製新的值給 function，只是這新的值，只是 copy 原本的參照值(reference, 可以當作記憶體位址)，因此 function 做任何修改時，也都是透過原來的參照值在做資料異動，會修改到原本的資料，要特別小心。
-
-### 3.1 Pass by Value with Struct and Struct Pointer (ex06_01)
-
-@import "ex06_01/main.go" {class=line-numbers}
-
-### 3.2 Pass by Value with Aray and Slice (ex06_02)
-
-@import "ex06_02/main.go" {class=line-numbers}
-
-## 4. Signature
-
-一個 function 的型別，通常也稱做 **Signature**。兩個 function 有相同的 signature，需滿足以下兩個條件：
-
-1. 參數 (parameters) 資料型別與順序相同，與參數名稱無關。
-1. 回傳的值的資料型別與順序相同
-
-eg:
-
-```go {.line-numbers}
-func add(x int, y int) int { return x+y }
-func sub(x, y int) (z int) { z= x - y; return }
-func first(x int, _ int) int { return x }
-func zero(int, int) int { return 0 }
-
-fmt.Printf("%T\n", add)   // "func(int, int) int"
-fmt.Printf("%T\n", sub)   // "func(int, int) int"
-fmt.Printf("%T\n", first) // "func(int, int) int"
-fmt.Printf("%T\n", zero)  // "func(int, int) int"
-```
-
-在 Go 的 function 也可以當作參數與回傳值。也因此 Go 也算是一種 first-class lanaugage.
-
-### 4.1 First-Class (ex06_04)
-
-function 也是一種資料型別，可以當作變數，或當作另一個 function 的參數及回傳值。
-以 Go 來說，**signature** 是 Function 的資料型別。當宣告 funcation 沒有指定 name 時，則稱為 **anonymous function**
-
-### 4.2 Assignment
-
-Function 可以當作一個值，assign 給某個變數。
-
-```go {.line-numbers}
-func square(n int) int { return n * n }
-func negative(n int) int { return -n }
-func product(m, n int) int { return m * n }
-
-var f func(int) int     // signature
-fmt.Printf("%T\n", f)   // "func(int) int"
-
-f = square
-fmt.Println(f(3))       // "9"
-
-f = negative
-fmt.Println(f(3))       // "-3"
-
-f = product // cannot use product (type func(int, int) int) as type func(int) int in assignment
-```
-
-### 4.3 As Parameter and Return
-
-Function 可以當作參數與回傳值。
-
-```go {.line-numbers}
-func square(n int) int { return n * n }
-func negative(n int) int { return -n }
-
-func compose(f, g func(int) int) func(int) int {
-    return func(a int) int {        // anonymous function
-        return g(f(a))
-    }
-}
-
-k1 := compose(square, negative)
-fmt.Printf("%T\n", k1)              // func(int) int
-fmt.Println(k1(10))                 // -100 negative(square(10))
-
-k2 := compose(negative, square)
-fmt.Printf("%T\n", k2)              // func(int) int
-fmt.Println(k2(10))                 // 100 square(negative(10))
-```
-
-
-### Variadic Function
-
-### First-Class Function
 
 ## Flow Control
 
@@ -350,4 +603,20 @@ fmt.Println(k2(10))                 // 100 square(negative(10))
 
 ### switch
 
-## Go Wildcard
+## 10. Go Wildcard
+
+Go 的 wildcard 是 `_`，可以用在以下情境：
+
+1. 因為 Go compiler 會檢查沒有使用的變數，如果不想使用該數值時，可以使用 `_` 來取代。
+
+```go {.line-numbers}
+_ = test()
+```
+
+1. 在宣告函式時，有些參數確定不會被用到，可以在宣告時使用 `_`。
+
+```go {.line-numbers}
+func mytest(_ int, str string) {
+
+}
+```
