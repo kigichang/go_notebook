@@ -13,7 +13,7 @@
   
 ### 2. 專案環境
   
-以本專案為例，說明如何使用 Workspace 與 Module 同時管理多個相依專案。如果只是單一專案，可以直接使用 Module。命名 Workspace 與 Module 時，請使用 underline **_** 區隔，不要使用 dash **-**。
+以本專案為例，說明如何使用 Workspace 與 Module 同時管理多個相依專案。如果只是單一專案，可以直接使用 Module。
   
 #### 2.1 Workspace
   

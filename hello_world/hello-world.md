@@ -21,7 +21,7 @@ markdown:
 
 ### 2. 專案環境
 
-以本專案為例，說明如何使用 Workspace 與 Module 同時管理多個相依專案。如果只是單一專案，可以直接使用 Module。命名 Workspace 與 Module 時，請使用 underline **_** 區隔，不要使用 dash **-**。
+以本專案為例，說明如何使用 Workspace 與 Module 同時管理多個相依專案。如果只是單一專案，可以直接使用 Module。
 
 #### 2.1 Workspace
 
@@ -125,7 +125,7 @@ $ env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build .
 
 ### 4. Go 語言特性
 
-1. Go 是編譯式語言，編譯成 Machine Code，而不是像 Java 是 Byte Code。
+1. Go 是編譯式語言，編譯成機器碼，而不是像 Java 是 Byte Code。
 1. Go 是強型別語言，變數宣告後，資料型別固定。
 1. Go 可以跨平台執行，前提是沒有使用到平台特有的函式庫。
 1. Go 有 Garbage Collection，可以不用自己管理記憶體。
